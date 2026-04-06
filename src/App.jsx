@@ -15,12 +15,15 @@ import { EnergyRing } from "./components/EnergyRing";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from '@studio-freight/lenis';
+import { CheckCircle2, Send, XCircle, Loader2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function BrunoDevPortfolio() {
   const [scrollY, setScrollY] = useState(0);
   const [activeSection, setActiveSection] = useState("hero");
+  const [formStatus, setFormStatus] = useState("idle"); // 'idle', 'submitting', 'success', 'error'
 
   const lenisRef = useRef(null);
   
@@ -209,6 +212,36 @@ export default function BrunoDevPortfolio() {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormStatus("submitting");
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/bruno.gustavo@nave.org.br", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (result.success === "true" || response.ok) {
+        setFormStatus("success");
+        e.target.reset();
+        setTimeout(() => setFormStatus("idle"), 5000);
+      } else {
+        setFormStatus("error");
+        setTimeout(() => setFormStatus("idle"), 5000);
+      }
+    } catch (err) {
+      setFormStatus("error");
+      setTimeout(() => setFormStatus("idle"), 5000);
+    }
+  };
+
   const projects = [
     { title: "Arquivos 2C", tags: ["React", "Tailwind CSS", "Framer Motion"], desc: "Plataforma desenvolvida para hospedar e compartilhar podcasts de um projeto escolar da minha turma.", color: C.neon, url: "https://arquivos2c.vercel.app/" },
     { title: "Osmosis Explorer", tags: ["React", "Three.js", "Framer Motion"], desc: "Experiência interativa em 3D criada para explicar os conceitos de osmose e pressão osmótica de forma visual e didática.", color: "#7c3aed", url: "https://osmosisx.vercel.app/" },
@@ -278,6 +311,14 @@ export default function BrunoDevPortfolio() {
         ::selection { background: ${C.neon}30; }
         * { cursor: none !important; }
         @media (max-width: 768px) { * { cursor: auto !important; } }
+        
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .animate-spin {
+          animation: spin 1s linear infinite;
+        }
       `}</style>
 
       <GlobalCursor />
@@ -570,16 +611,14 @@ export default function BrunoDevPortfolio() {
           </p>
 
           <form
-            action="https://formsubmit.co/bruno.gustavo@nave.org.br"
-            method="POST"
-            style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "40px" }}
+            onSubmit={handleSubmit}
+            style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "40px", position: "relative" }}
           >
             <input type="hidden" name="_subject" value="Nova mensagem do Portfólio BRUNO.DEV" />
             <input type="hidden" name="_captcha" value="false" />
             <input type="hidden" name="_template" value="table" />
-            <input type="hidden" name="_next" value={typeof window !== 'undefined' ? window.location.href : ''} />
 
-            <input name="nome" type="text" placeholder="Seu nome" required style={{
+            <input name="nome" type="text" placeholder="Seu nome" required disabled={formStatus === 'submitting'} style={{
               background: "transparent",
               border: `1px solid #ffffff15`,
               padding: "16px 20px",
@@ -588,6 +627,7 @@ export default function BrunoDevPortfolio() {
               fontSize: "13px",
               outline: "none",
               transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+              opacity: formStatus === 'submitting' ? 0.6 : 1,
             }}
               onFocus={(e) => {
                 e.target.style.borderColor = `${C.neon}60`;
@@ -598,7 +638,7 @@ export default function BrunoDevPortfolio() {
                 e.target.style.boxShadow = "none";
               }}
             />
-            <input name="email" type="email" placeholder="seu@email.com" required style={{
+            <input name="email" type="email" placeholder="seu@email.com" required disabled={formStatus === 'submitting'} style={{
               background: "transparent",
               border: `1px solid #ffffff15`,
               padding: "16px 20px",
@@ -607,6 +647,7 @@ export default function BrunoDevPortfolio() {
               fontSize: "13px",
               outline: "none",
               transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+              opacity: formStatus === 'submitting' ? 0.6 : 1,
             }}
               onFocus={(e) => {
                 e.target.style.borderColor = `${C.neon}60`;
@@ -617,7 +658,7 @@ export default function BrunoDevPortfolio() {
                 e.target.style.boxShadow = "none";
               }}
             />
-            <textarea name="mensagem" placeholder="Sua mensagem..." rows={5} required style={{
+            <textarea name="mensagem" placeholder="Sua mensagem..." rows={5} required disabled={formStatus === 'submitting'} style={{
               background: "transparent",
               border: `1px solid #ffffff15`,
               padding: "16px 20px",
@@ -627,38 +668,103 @@ export default function BrunoDevPortfolio() {
               outline: "none",
               resize: "none",
               transition: "border-color 0.3s ease",
+              opacity: formStatus === 'submitting' ? 0.6 : 1,
             }}
               onFocus={(e) => { e.target.style.borderColor = `${C.neon}60`; }}
               onBlur={(e) => { e.target.style.borderColor = "#ffffff15"; }}
             />
 
-            <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-              <button type="submit" style={{
-                display: "inline-flex", alignItems: "center", gap: "8px",
-                padding: "14px 32px",
-                border: "none",
-                background: `linear-gradient(135deg, #00ffe740, #00ffe715)`,
-                color: C.neon,
-                fontFamily: "'Space Mono', monospace",
-                fontSize: "13px", letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-                clipPath: "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
-                transition: "all 0.3s ease",
-              }}
+            <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap", position: "relative" }}>
+              <button 
+                type="submit" 
+                disabled={formStatus === 'submitting'}
+                style={{
+                  display: "inline-flex", alignItems: "center", gap: "12px",
+                  padding: "14px 32px",
+                  border: "none",
+                  background: formStatus === 'submitting' ? `${C.neon}20` : `linear-gradient(135deg, #00ffe740, #00ffe715)`,
+                  color: C.neon,
+                  fontFamily: "'Space Mono', monospace",
+                  fontSize: "13px", letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  cursor: formStatus === 'submitting' ? "not-allowed" : "pointer",
+                  clipPath: "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
+                  transition: "all 0.3s ease",
+                  opacity: formStatus === 'submitting' ? 0.7 : 1,
+                  minWidth: "220px",
+                  justifyContent: "center",
+                }}
                 onMouseEnter={(e) => {
+                  if (formStatus === 'submitting') return;
                   e.currentTarget.style.background = `${C.neon}22`;
                   e.currentTarget.style.boxShadow = `0 0 20px ${C.neon}60, inset 0 0 20px ${C.neon}10`;
                   e.currentTarget.style.transform = "translateY(-2px)";
                 }}
                 onMouseLeave={(e) => {
+                  if (formStatus === 'submitting') return;
                   e.currentTarget.style.background = `linear-gradient(135deg, #00ffe740, #00ffe715)`;
                   e.currentTarget.style.boxShadow = "none";
                   e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
-                Enviar Mensagem ↗
+                {formStatus === 'submitting' ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    Enviando...
+                  </>
+                ) : (
+                  <>
+                    Enviar Mensagem <Send size={16} />
+                  </>
+                )}
               </button>
+
+              {/* Success/Error Toast with Smooth Animations */}
+              <AnimatePresence mode="wait">
+                {formStatus !== 'idle' && formStatus !== 'submitting' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: -20, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                    style={{
+                      position: "absolute",
+                      bottom: "100%",
+                      left: "50%",
+                      x: "-50%", // Framer Motion 'x' for centering
+                      padding: "16px 24px",
+                      background: `${C.bg}f0`,
+                      backdropFilter: "blur(10px)",
+                      border: `1px solid ${formStatus === 'success' ? C.neon : '#ef4444'}80`,
+                      borderRadius: "2px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "12px",
+                      zIndex: 10,
+                      boxShadow: `0 0 30px ${formStatus === 'success' ? C.neon : '#ef4444'}20`,
+                      minWidth: "300px",
+                    }}
+                  >
+                    {formStatus === 'success' ? (
+                      <>
+                        <CheckCircle2 color={C.neon} size={20} />
+                        <div style={{ textAlign: "left" }}>
+                          <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "12px", color: C.neon }}>MENSAGEM ENVIADA</div>
+                          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", color: C.muted }}>Responderei em breve!</div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <XCircle color="#ef4444" size={20} />
+                        <div style={{ textAlign: "left" }}>
+                          <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "12px", color: "#ef4444" }}>ERRO NO ENVIO</div>
+                          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", color: C.muted }}>Tente novamente ou use o GitHub.</div>
+                        </div>
+                      </>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </form>
 
