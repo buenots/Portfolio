@@ -1,15 +1,15 @@
 import { useRef, useState } from "react";
 import { C } from "../constants";
 
-export function ProjectCard({ title, tags, desc, index }) {
+export function ProjectCard({ title, tags, desc, color, index }) {
   const cardRef = useRef();
   const [hovered, setHovered] = useState(false);
 
   const handleMouseMove = (e) => {
     const r = cardRef.current.getBoundingClientRect();
-    const x = ((e.clientX - r.left) / r.width - 0.5) * 10;
-    const y = ((e.clientY - r.top) / r.height - 0.5) * -10;
-    cardRef.current.style.transform = `perspective(1000px) rotateY(${x}deg) rotateX(${y}deg) translateY(-4px)`;
+    const x = ((e.clientX - r.left) / r.width - 0.5) * 18;
+    const y = ((e.clientY - r.top) / r.height - 0.5) * -18;
+    cardRef.current.style.transform = `perspective(1000px) rotateY(${x}deg) rotateX(${y}deg) translateY(-6px)`;
   };
 
   const handleMouseLeave = () => {
@@ -17,53 +17,62 @@ export function ProjectCard({ title, tags, desc, index }) {
     setHovered(false);
   };
 
+  const cColor = color || C.neon;
+
   return (
     <div
-      className={`project-card-${index}`}
+      className={`project-card-container project-card-${index}`}
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={handleMouseLeave}
       style={{
-        background: C.surface,
-        border: `1px solid ${hovered ? C.neon : "#ffffff08"}`,
-        borderRadius: "16px",
-        padding: "40px",
+        background: "linear-gradient(135deg, #060d1490, #0a1628aa)",
+        border: `1px solid ${hovered ? cColor : "#ffffff12"}`,
+        borderRadius: "2px",
+        padding: "36px",
         cursor: "pointer",
-        transition: "transform 0.2s ease, border-color 0.4s ease, box-shadow 0.4s ease",
-        boxShadow: hovered ? `0 10px 40px ${C.neon}10` : "0 4px 20px #00000040",
+        transition: "transform 0.1s ease, border-color 0.3s ease, box-shadow 0.3s ease",
+        boxShadow: hovered ? `0 20px 60px ${cColor}25, 0 0 0 1px ${cColor}30` : "0 4px 24px #00000060",
         position: "relative",
         overflow: "hidden",
       }}
     >
       <div style={{
-        width: hovered ? "60px" : "36px", height: "4px",
-        background: C.neon, marginBottom: "32px",
-        transition: "width 0.4s cubic-bezier(0.23, 1, 0.32, 1)",
+        position: "absolute", top: 0, right: 0,
+        width: "60px", height: "60px",
+        background: `linear-gradient(225deg, ${cColor}30, transparent)`,
+        clipPath: "polygon(100% 0%, 0% 0%, 100% 100%)",
+      }} />
+
+      <div style={{
+        width: "36px", height: "3px",
+        background: cColor, marginBottom: "24px",
+        boxShadow: `0 0 12px ${cColor}`,
+        transition: "width 0.3s ease",
+        ...(hovered ? { width: "60px" } : {}),
       }} />
 
       <h3 style={{
-        fontFamily: "'Bebas Neue', sans-serif",
-        fontSize: "clamp(24px, 3vw, 32px)",
-        color: C.text, marginBottom: "16px", letterSpacing: "0.05em",
+        fontFamily: "'Space Mono', monospace",
+        fontSize: "clamp(16px, 2vw, 20px)",
+        color: C.text, marginBottom: "12px", letterSpacing: "0.05em",
       }}>{title}</h3>
 
       <p style={{
         fontFamily: "'DM Sans', sans-serif",
-        fontSize: "15px", color: C.muted, lineHeight: "1.6", marginBottom: "32px",
+        fontSize: "14px", color: C.muted, lineHeight: "1.7", marginBottom: "20px",
       }}>{desc}</p>
 
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", position: "relative", zIndex: 2 }}>
         {tags.map((t) => (
           <span key={t} style={{
-            padding: "6px 16px",
-            border: `1px solid ${C.neon}30`,
-            borderRadius: "20px",
-            color: C.neon,
+            padding: "4px 12px",
+            border: `1px solid ${cColor}40`,
+            color: cColor,
             fontFamily: "'Space Mono', monospace",
-            fontSize: "11px", letterSpacing: "0.1em",
-            background: hovered ? `${C.neon}10` : "transparent",
-            transition: "background 0.3s ease"
+            fontSize: "10px", letterSpacing: "0.1em",
+            background: `${cColor}10`,
           }}>{t}</span>
         ))}
       </div>

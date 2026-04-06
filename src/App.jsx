@@ -3,12 +3,15 @@ import { Canvas } from "@react-three/fiber";
 import { C } from "./constants";
 import { GlobalCursor } from "./components/GlobalCursor";
 import { FluidBlob } from "./components/FluidBlob";
+import { FloatingGeometry } from "./components/FloatingGeometry";
+import { FloatingCrystals } from "./components/FloatingCrystals";
 import { BackgroundScene } from "./components/BackgroundScene";
 import { SkillParticles } from "./components/SkillParticles";
 import { NeonBtn } from "./components/NeonBtn";
 import { Section } from "./components/Section";
 import { ProjectCard } from "./components/ProjectCard";
 import { SkillBadge } from "./components/SkillBadge";
+import { EnergyRing } from "./components/EnergyRing";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from '@studio-freight/lenis';
@@ -63,7 +66,7 @@ export default function BrunoDevPortfolio() {
 
     gsap.fromTo(navRef.current, { y: -80, opacity: 0 }, { y: 0, opacity: 1, duration: 1, delay: 1.5, ease: "power4.out" });
 
-    // 2. Hero Scrub Parallax (Lando-style fade and shrink on scroll)
+    // 2. Hero Scrub Parallax
     gsap.to(heroWrapperRef.current, {
       y: 200,
       scale: 0.9,
@@ -85,7 +88,7 @@ export default function BrunoDevPortfolio() {
           trigger: "#about",
           start: "top 75%",
           end: "top 40%",
-          scrub: 1, // Smooth catch-up
+          scrub: 1, 
         }
       }
     );
@@ -150,52 +153,42 @@ export default function BrunoDevPortfolio() {
   }, []);
 
   const projects = [
-    { title: "NEON_ARENA", tags: ["Unity", "C#", "GLSL"], desc: "Battle royale tático com shaders procedurais e sistema de física customizado." },
-    { title: "CYBER_DASH", tags: ["Godot", "GDScript", "WebGL"], desc: "Runner infinito exportado para web com WebAssembly, alta performance." },
-    { title: "STELLAR_UI", tags: ["React", "Three.js", "GSAP"], desc: "Design system com componentes 3D interativos para dashboards focados." },
-    { title: "VOID_NET", tags: ["Node.js", "WebSocket", "Canvas"], desc: "Plataforma multiplayer real-time com engine de colisão extrema." },
+    { title: "NEON_ARENA", tags: ["Unity", "C#", "GLSL"], desc: "Battle royale tático com shaders procedurais e sistema de física customizado.", color: C.neon },
+    { title: "CYBER_DASH", tags: ["Godot", "GDScript", "WebGL"], desc: "Runner infinito cyberpunk exportado para web com WebAssembly.", color: "#7c3aed" },
+    { title: "STELLAR_UI", tags: ["React", "Three.js", "GSAP"], desc: "Design system com componentes 3D interativos para dashboards focados.", color: "#2563eb" },
+    { title: "VOID_NET", tags: ["Node.js", "WebSocket", "Canvas"], desc: "Plataforma multiplayer real-time com engine de colisão extrema.", color: "#f59e0b" },
   ];
 
   const skills = [
-    { name: "Three.js / WebGL", level: 90 },
-    { name: "React / Next.js", level: 88 },
-    { name: "Unity / C#", level: 85 },
-    { name: "GSAP / Animação", level: 82 },
-    { name: "Node.js / APIs", level: 80 },
-    { name: "GLSL / Shaders", level: 75 },
-    { name: "Godot / GDScript", level: 72 },
-    { name: "TypeScript", level: 78 },
+    { name: "Three.js / WebGL", level: 90, color: C.neon },
+    { name: "React / Next.js", level: 88, color: "#2563eb" },
+    { name: "Unity / C#", level: 85, color: "#7c3aed" },
+    { name: "GSAP / Animação", level: 82, color: C.neon },
+    { name: "Node.js / APIs", level: 80, color: "#10b981" },
+    { name: "GLSL / Shaders", level: 75, color: "#f59e0b" },
+    { name: "Godot / GDScript", level: 72, color: "#7c3aed" },
+    { name: "TypeScript", level: 78, color: "#2563eb" },
   ];
 
   const navLinks = ["about", "projects", "skills", "contact"];
 
-  const aboutWords = "Construo experiências digitais que vivem na interseção entre arte e velocidade. O código corre pelas veias, arquitetado pixel a pixel para transbordar impacto, fluidez e alta performance.".split(" ");
+  const aboutWords = "Construo experiências digitais que vivem na interseção entre arte e engenharia. Cada linha de código é coreografada para criar impacto, fluidez e imersão total.".split(" ");
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;700;900&family=Bebas+Neue&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html.lenis {
-          height: auto;
-        }
-        .lenis.lenis-smooth {
-          scroll-behavior: auto !important;
-        }
-        .lenis.lenis-smooth [data-lenis-prevent] {
-          overscroll-behavior: contain;
-        }
-        .lenis.lenis-stopped {
-          overflow: hidden;
-        }
-        .lenis.lenis-scrolling iframe {
-          pointer-events: none;
-        }
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+        .lenis.lenis-scrolling iframe { pointer-events: none; }
         body { background: ${C.bg}; color: ${C.text}; overflow-x: hidden; }
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: ${C.bg}; }
-        ::-webkit-scrollbar-thumb { background: ${C.neon}; border-radius: 4px; }
-        ::selection { background: ${C.neon}; color: ${C.bg}; }
+        ::-webkit-scrollbar-thumb { background: ${C.neon}40; border-radius: 2px; }
+        ::selection { background: ${C.neon}30; }
         * { cursor: none !important; }
         @media (max-width: 768px) { * { cursor: auto !important; } }
       `}</style>
@@ -205,137 +198,148 @@ export default function BrunoDevPortfolio() {
       <nav ref={navRef} style={{
         position: "fixed", top: 0, left: 0, right: 0,
         zIndex: 1000,
-        padding: "24px clamp(24px, 6vw, 80px)",
+        padding: "20px clamp(24px, 6vw, 80px)",
         display: "flex", alignItems: "center", justifyContent: "space-between",
         background: scrollY > 50 ? `${C.bg}e0` : "transparent",
-        backdropFilter: scrollY > 50 ? "blur(32px)" : "none",
-        borderBottom: scrollY > 50 ? `1px solid #ffffff05` : "none",
+        backdropFilter: scrollY > 50 ? "blur(20px)" : "none",
+        borderBottom: scrollY > 50 ? `1px solid #ffffff08` : "none",
         transition: "all 0.4s ease",
       }}>
         <div style={{
-          fontFamily: "'Space Mono', monospace", fontSize: "14px", fontWeight: "bold",
-          color: C.text, letterSpacing: "0.15em",
-          display: "flex", alignItems: "center", gap: "12px",
+          fontFamily: "'Space Mono', monospace", fontSize: "15px",
+          color: C.neon, letterSpacing: "0.15em",
+          display: "flex", alignItems: "center", gap: "10px",
         }}>
-          <span style={{ color: C.neon }}>//</span> BRUNO.DEV
+          <span style={{ color: C.muted }}>//</span> BRUNO.DEV
         </div>
 
-        <div style={{ display: "flex", gap: "40px", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: "32px", alignItems: "center" }}>
           {navLinks.map((link) => (
             <a key={link} href={`#${link}`} style={{
-              fontFamily: "'Space Mono', monospace", fontSize: "11px", fontWeight: "bold",
-              letterSpacing: "0.2em", textTransform: "uppercase",
-              color: activeSection === link ? C.text : C.muted,
+              fontFamily: "'Space Mono', monospace", fontSize: "11px",
+              letterSpacing: "0.15em", textTransform: "uppercase",
+              color: activeSection === link ? C.neon : C.muted,
               textDecoration: "none",
               transition: "color 0.3s ease",
               position: "relative",
             }}
               onMouseEnter={(e) => e.target.style.color = C.neon}
-              onMouseLeave={(e) => e.target.style.color = activeSection === link ? C.text : C.muted}
+              onMouseLeave={(e) => e.target.style.color = activeSection === link ? C.neon : C.muted}
             >
               {link}
             </a>
           ))}
+          <NeonBtn href="#contact">Contratar</NeonBtn>
         </div>
       </nav>
 
       <Section id="hero" style={{ minHeight: "100vh", display: "flex", alignItems: "center", overflow: "hidden", padding: 0 }}>
-        {/* NEW REACTIVE 3D FLUID BLOB AS BACKGROUND */}
-        <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-          <Canvas camera={{ position: [0, 0, 5], fov: 60 }} gl={{ antialias: true, alpha: true }}>
+        {/* BACKGROUND 3D GIGANTE INTERATIVO (Agora recolorido para cyberpunk) */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+          <Canvas eventSource={typeof window !== 'undefined' ? document.body : undefined} camera={{ position: [0, 0, 5], fov: 60 }} gl={{ antialias: true, alpha: true }}>
             <FluidBlob />
           </Canvas>
         </div>
 
         <div style={{
           position: "absolute", inset: 0, zIndex: 1,
-          background: `radial-gradient(ellipse 80% 80% at 50% 50%, transparent 0%, ${C.bg} 90%)`,
+          background: `radial-gradient(ellipse 60% 80% at 60% 50%, transparent 30%, ${C.bg} 100%)`,
         }} />
 
-        {/* This wrapper is animated dynamically with scrubbing */}
         <div ref={heroWrapperRef} style={{
           position: "relative", zIndex: 2,
           padding: "0 clamp(24px, 8vw, 120px)",
-          maxWidth: "1100px",
+          maxWidth: "800px",
           width: "100%",
         }}>
           <div style={{
-            fontFamily: "'Space Mono', monospace", fontSize: "12px", fontWeight: "bold",
-            color: C.neon, letterSpacing: "0.4em", textTransform: "uppercase",
-            marginBottom: "32px", display: "flex", alignItems: "center", gap: "16px",
+            fontFamily: "'Space Mono', monospace", fontSize: "11px",
+            color: C.neon, letterSpacing: "0.3em", textTransform: "uppercase",
+            marginBottom: "24px", display: "flex", alignItems: "center", gap: "12px",
           }}>
-            <span style={{ width: "60px", height: "2px", background: C.neon }} />
-            GAMER • PROGRAMADOR • VELOCIDADE
+            <span style={{ width: "32px", height: "1px", background: C.neon, boxShadow: `0 0 8px ${C.neon}` }} />
+            DESENVOLVEDOR • GAME DEV • WEB
           </div>
 
           <h1 ref={heroTitleRef} style={{
             fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: "clamp(90px, 18vw, 240px)",
-            lineHeight: "0.80",
-            letterSpacing: "0.01em",
+            fontSize: "clamp(72px, 14vw, 180px)",
+            lineHeight: "0.9",
+            letterSpacing: "0.02em",
             color: C.text,
-            marginBottom: "16px",
-            opacity: 0, // setup for fromTo
+            marginBottom: "8px",
+            opacity: 0,
           }}>
             BRUNO<br />
             <span style={{
-              color: C.neon,
+              WebkitTextStroke: `2px ${C.neon}`,
+              color: "transparent",
+              textShadow: `0 0 40px ${C.neon}40`,
             }}>DEV</span>
           </h1>
 
           <p ref={heroSubRef} style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: "clamp(16px, 2vw, 20px)",
-            color: C.muted, lineHeight: "1.6",
-            maxWidth: "540px", marginTop: "40px", marginBottom: "56px",
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: "clamp(15px, 2vw, 18px)",
+            color: C.muted, lineHeight: "1.7",
+            maxWidth: "480px", marginTop: "28px", marginBottom: "48px",
             opacity: 0,
-            fontWeight: "400",
           }}>
-            Desenvolvedor focado em performance extrema para <span style={{ color: C.text, fontWeight: "bold" }}>jogos e plataforma web</span>. Arquitetura fluida e limpa construída para vencer as barreiras do browser.
+            Desenvolvedor focado em <span style={{ color: C.neon }}>jogos e web</span> — transformando ideias em experiências imersivas que desafiam os limites do browser.
           </p>
 
-          <div ref={heroCTARef} style={{ display: "flex", gap: "24px", flexWrap: "wrap", opacity: 0 }}>
-            <NeonBtn href="#projects">INICIAR CORRIDA</NeonBtn>
+          <div ref={heroCTARef} style={{ display: "flex", gap: "16px", flexWrap: "wrap", opacity: 0 }}>
+            <NeonBtn href="#projects">Ver Projetos</NeonBtn>
+            <NeonBtn href="#contact" outline>Entre em Contato</NeonBtn>
           </div>
         </div>
       </Section>
 
       <Section id="about">
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 clamp(24px, 6vw, 80px)" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: "80px", alignItems: "center" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 clamp(24px, 6vw, 80px)", position: "relative" }}>
+          
+          {/* Elemento 3D Novo - Jogado mais pro fundo com opacidade muito baixa */}
+          <div style={{ position: "absolute", right: "0%", top: "0%", width: "100%", height: "100%", zIndex: 0, opacity: 0.2, pointerEvents: "none", filter: "blur(2px)" }}>
+            <Canvas eventSource={typeof window !== 'undefined' ? document.body : undefined} camera={{ position: [0, 0, 10], fov: 45 }}>
+               <FloatingGeometry />
+            </Canvas>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: "80px", alignItems: "center", position: "relative", zIndex: 1 }}>
             <div>
               <div style={{
-                fontFamily: "'Space Mono', monospace", fontSize: "11px", fontWeight: "bold",
+                fontFamily: "'Space Mono', monospace", fontSize: "10px",
                 color: C.neon, letterSpacing: "0.3em", textTransform: "uppercase",
-                marginBottom: "24px",
+                marginBottom: "16px",
               }}>01 / SOBRE</div>
 
               <h2 style={{
                 fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: "clamp(56px, 8vw, 110px)",
-                lineHeight: "0.9", color: C.text,
-                marginBottom: "64px", letterSpacing: "0.02em",
-              }}>QUEM<br /><span style={{ color: C.muted }}>SOU EU</span></h2>
+                fontSize: "clamp(48px, 7vw, 96px)",
+                lineHeight: "0.95", color: C.text,
+                marginBottom: "48px", letterSpacing: "0.02em",
+              }}>QUEM<br />SOU EU</h2>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
                 {[
                   { n: "5+", l: "Anos de XP" },
                   { n: "20+", l: "Projetos" },
                   { n: "8", l: "Jogos Lançados" },
-                  { n: "100%", l: "Performance" },
+                  { n: "100%", l: "Dedicação" },
                 ].map((s) => (
                   <div key={s.l} className="about-stat" style={{
-                    borderTop: `2px solid #ffffff10`,
-                    paddingTop: "24px",
+                    borderTop: `1px solid ${C.neon}30`,
+                    paddingTop: "16px",
                   }}>
                     <div style={{
                       fontFamily: "'Bebas Neue', sans-serif",
-                      fontSize: "56px", color: C.text, lineHeight: 1,
+                      fontSize: "48px", color: C.neon, lineHeight: 1,
+                      textShadow: `0 0 20px ${C.neon}60`,
                     }}>{s.n}</div>
                     <div style={{
                       fontFamily: "'Space Mono', monospace",
-                      fontSize: "10px", fontWeight: "bold", color: C.neon, letterSpacing: "0.15em",
-                      textTransform: "uppercase", marginTop: "12px",
+                      fontSize: "10px", color: C.muted, letterSpacing: "0.15em",
+                      textTransform: "uppercase", marginTop: "4px",
                     }}>{s.l}</div>
                   </div>
                 ))}
@@ -344,55 +348,60 @@ export default function BrunoDevPortfolio() {
 
             <div>
               <p style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: "clamp(20px, 3vw, 32px)",
-                fontWeight: "500",
-                lineHeight: "1.5", color: C.text,
-                letterSpacing: "-0.01em"
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: "clamp(18px, 2.5vw, 26px)",
+                lineHeight: "1.7", color: C.text,
               }}>
                 {aboutWords.map((w, i) => (
-                  <span key={i} className="about-word" style={{ display: "inline-block", marginRight: "8px", opacity: 0 }}>
+                  <span key={i} className="about-word" style={{ display: "inline-block", marginRight: "6px", opacity: 0 }}>
                     {w}
                   </span>
                 ))}
               </p>
 
-              <div style={{ marginTop: "56px", padding: "32px", border: `1px solid #ffffff10`, background: C.surface, borderRadius: "16px" }}>
-                <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "12px", color: C.neon, marginBottom: "16px", fontWeight: "bold" }}>
-                  <span style={{ color: C.muted }}>const</span> MINDSET = [
+              <div style={{ marginTop: "40px", padding: "24px", border: `1px solid ${C.neon}20`, background: `${C.neon}05` }}>
+                <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "11px", color: C.neon, marginBottom: "8px" }}>
+                  <span style={{ color: C.muted }}>const</span> focus = [
                 </div>
-                {["'Game Development'", "'Web 3D Experiences'", "'Real-time Engineering'", "'Creative Architecture'"].map((f, i) => (
+                {["'Game Development'", "'Web 3D Experiences'", "'Real-time Graphics'", "'Creative Coding'"].map((f, i) => (
                   <div key={i} style={{
-                    fontFamily: "'Space Mono', monospace", fontSize: "12px",
-                    color: C.text, paddingLeft: "24px", marginBottom: "8px"
+                    fontFamily: "'Space Mono', monospace", fontSize: "11px",
+                    color: "#e2e8f0", paddingLeft: "20px",
                   }}>{f},</div>
                 ))}
-                <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "12px", color: C.neon, marginTop: "8px", fontWeight: "bold" }}>];</div>
+                <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "11px", color: C.neon }}>];</div>
               </div>
             </div>
           </div>
         </div>
       </Section>
 
-      <Section id="projects" style={{ background: C.surface }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 clamp(24px, 6vw, 80px)" }}>
-          <div style={{ marginBottom: "88px" }}>
+      <Section id="projects" style={{ background: `linear-gradient(180deg, ${C.bg}, ${C.surface}, ${C.bg})` }}>
+        {/* Elemento 3D Novo - Mais opacidade reduzida para nao causar barulho visual */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, opacity: 0.3, pointerEvents: "none" }}>
+            <Canvas eventSource={typeof window !== 'undefined' ? document.body : undefined} camera={{ position: [0, 0, 10], fov: 75 }}>
+               <FloatingCrystals />
+            </Canvas>
+        </div>
+
+        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 clamp(24px, 6vw, 80px)", position: "relative", zIndex: 1 }}>
+          <div style={{ marginBottom: "72px" }}>
             <div style={{
-              fontFamily: "'Space Mono', monospace", fontSize: "11px", fontWeight: "bold",
+              fontFamily: "'Space Mono', monospace", fontSize: "10px",
               color: C.neon, letterSpacing: "0.3em", textTransform: "uppercase",
-              marginBottom: "24px",
+              marginBottom: "16px",
             }}>02 / PROJETOS</div>
             <h2 style={{
               fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: "clamp(56px, 8vw, 110px)",
-              lineHeight: "0.9", color: C.text, letterSpacing: "0.02em",
-            }}>TRABALHOS<br /><span style={{ color: C.muted }}>SELECIONADOS</span></h2>
+              fontSize: "clamp(48px, 7vw, 96px)",
+              lineHeight: "0.95", color: C.text, letterSpacing: "0.02em",
+            }}>TRABALHOS<br /><span style={{ WebkitTextStroke: `2px ${C.neon}`, color: "transparent" }}>SELECIONADOS</span></h2>
           </div>
 
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 480px), 1fr))",
-            gap: "32px",
+            gap: "20px",
           }}>
             {projects.map((p, i) => (
                <div key={p.title} className="project-card-container">
@@ -406,30 +415,30 @@ export default function BrunoDevPortfolio() {
       <Section id="skills">
         <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 clamp(24px, 6vw, 80px)" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start" }}>
-            <div style={{ position: "sticky", top: "150px" }}>
+            <div>
               <div style={{
-                fontFamily: "'Space Mono', monospace", fontSize: "11px", fontWeight: "bold",
+                fontFamily: "'Space Mono', monospace", fontSize: "10px",
                 color: C.neon, letterSpacing: "0.3em", textTransform: "uppercase",
-                marginBottom: "24px",
+                marginBottom: "16px",
               }}>03 / SKILLS</div>
               <h2 style={{
                 fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: "clamp(56px, 8vw, 110px)",
-                lineHeight: "0.9", color: C.text, letterSpacing: "0.02em",
-                marginBottom: "48px",
-              }}>STACK<br /><span style={{ color: C.muted }}>TÉCNICA</span></h2>
+                fontSize: "clamp(48px, 7vw, 96px)",
+                lineHeight: "0.95", color: C.text, letterSpacing: "0.02em",
+                marginBottom: "40px",
+              }}>STACK<br /><span style={{ WebkitTextStroke: `2px ${C.neon}`, color: "transparent" }}>TÉCNICA</span></h2>
 
-              <div style={{ height: "360px", borderRadius: "16px", overflow: "hidden", background: C.surface, border: `1px solid #ffffff05` }}>
-                <Canvas camera={{ position: [0, 0, 8], fov: 60 }}>
+              <div style={{ height: "300px", borderRadius: "2px", overflow: "hidden", border: `1px solid ${C.neon}15`, pointerEvents: "none" }}>
+                <Canvas eventSource={typeof window !== 'undefined' ? document.body : undefined} camera={{ position: [0, 0, 8], fov: 60 }}>
                   <ambientLight intensity={0.1} />
                   <pointLight color={C.neon} intensity={4} position={[3, 3, 3]} />
-                  <pointLight color="#ffffff" intensity={1} position={[-3, -3, 2]} />
+                  <pointLight color="#7c3aed" intensity={3} position={[-3, -3, 2]} />
                   <SkillParticles />
                 </Canvas>
               </div>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px", paddingTop: "0px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", paddingTop: "80px" }}>
               {skills.map((s, i) => (
                 <div key={s.name} className="skill-badge-item">
                   <SkillBadge {...s} delay={0} />
@@ -440,91 +449,94 @@ export default function BrunoDevPortfolio() {
         </div>
       </Section>
 
-      <Section id="contact" style={{ background: C.surface }}>
-        <div style={{ maxWidth: "800px", margin: "0 auto", padding: "0 clamp(24px, 6vw, 80px)", textAlign: "center" }} className="contact-inner">
+      <Section id="contact" style={{ background: C.surface, position: "relative", overflow: "hidden" }}>
+        {/* 3D Energy Ring no fundo do contato */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, opacity: 0.25, pointerEvents: "none" }}>
+          <Canvas eventSource={typeof window !== 'undefined' ? document.body : undefined} camera={{ position: [0, 0, 8], fov: 50 }}>
+            <EnergyRing />
+          </Canvas>
+        </div>
+
+        <div style={{ maxWidth: "800px", margin: "0 auto", padding: "0 clamp(24px, 6vw, 80px)", textAlign: "center", position: "relative", zIndex: 1 }} className="contact-inner">
           <div style={{
-            fontFamily: "'Space Mono', monospace", fontSize: "11px", fontWeight: "bold",
+            fontFamily: "'Space Mono', monospace", fontSize: "10px",
             color: C.neon, letterSpacing: "0.3em", textTransform: "uppercase",
-            marginBottom: "24px",
+            marginBottom: "16px",
           }}>04 / CONTATO</div>
 
           <h2 style={{
             fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: "clamp(64px, 10vw, 140px)",
-            lineHeight: "0.85", color: C.text, letterSpacing: "0.02em",
-            marginBottom: "32px",
+            fontSize: "clamp(48px, 9vw, 120px)",
+            lineHeight: "0.9", color: C.text, letterSpacing: "0.02em",
+            marginBottom: "24px",
           }}>
             VAMOS<br />
-            <span style={{ color: C.neon }}>CRIAR</span><br />
-            JUNTOS
+            <span style={{ WebkitTextStroke: `2px ${C.neon}`, color: "transparent", textShadow: `0 0 60px ${C.neon}30` }}>
+              CRIAR
+            </span>
+            <br />ALGO
           </h2>
 
           <p style={{
-            fontFamily: "'Inter', sans-serif", fontSize: "18px",
-            color: C.muted, marginBottom: "64px", maxWidth: "480px", margin: "0 auto 64px",
-            lineHeight: "1.6"
+            fontFamily: "'DM Sans', sans-serif", fontSize: "16px",
+            color: C.muted, marginBottom: "56px", maxWidth: "400px", margin: "0 auto 56px",
           }}>
-            Pronto para novos desafios técnicos. Aberto para projetos freelance, colaborações exclusivas e posições desafiadoras.
+            Aberto para projetos freelance, colaborações e posições CLT/PJ.
           </p>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "20px", marginBottom: "48px" }}>
-            {["Seu nome", "seu@email.com"].map((ph) => (
-              <input key={ph} type={ph === "seu@email.com" ? "email" : "text"} placeholder={ph} style={{
-                background: C.bg,
-                border: `1px solid #ffffff10`,
-                borderRadius: "12px",
-                padding: "20px 24px",
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "40px" }}>
+            {[
+              { ph: "Seu nome", type: "text" },
+              { ph: "seu@email.com", type: "email" },
+            ].map((f) => (
+              <input key={f.ph} type={f.type} placeholder={f.ph} style={{
+                background: "transparent",
+                border: `1px solid #ffffff15`,
+                padding: "16px 20px",
                 color: C.text,
-                fontFamily: "'Inter', sans-serif",
-                fontSize: "15px",
+                fontFamily: "'Space Mono', monospace",
+                fontSize: "13px",
                 outline: "none",
-                transition: "all 0.3s ease",
+                transition: "border-color 0.3s ease, box-shadow 0.3s ease",
               }}
                 onFocus={(e) => {
-                  e.target.style.borderColor = C.neon;
-                  e.target.style.boxShadow = `0 4px 20px ${C.neon}15`;
+                  e.target.style.borderColor = `${C.neon}60`;
+                  e.target.style.boxShadow = `0 0 20px ${C.neon}10`;
                 }}
                 onBlur={(e) => {
-                  e.target.style.borderColor = "#ffffff10";
+                  e.target.style.borderColor = "#ffffff15";
                   e.target.style.boxShadow = "none";
                 }}
               />
             ))}
             <textarea placeholder="Sua mensagem..." rows={5} style={{
-              background: C.bg,
-              border: `1px solid #ffffff10`,
-              borderRadius: "12px",
-              padding: "20px 24px",
+              background: "transparent",
+              border: `1px solid #ffffff15`,
+              padding: "16px 20px",
               color: C.text,
-              fontFamily: "'Inter', sans-serif",
-              fontSize: "15px",
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: "14px",
               outline: "none",
               resize: "none",
-              transition: "all 0.3s ease",
+              transition: "border-color 0.3s ease",
             }}
-              onFocus={(e) => {
-                e.target.style.borderColor = C.neon;
-                e.target.style.boxShadow = `0 4px 20px ${C.neon}15`;
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = "#ffffff10";
-                e.target.style.boxShadow = "none";
-              }}
+              onFocus={(e) => { e.target.style.borderColor = `${C.neon}60`; }}
+              onBlur={(e) => { e.target.style.borderColor = "#ffffff15"; }}
             />
           </div>
 
           <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-            <NeonBtn>ENVIAR MENSAGEM</NeonBtn>
+            <NeonBtn>Enviar Mensagem ↗</NeonBtn>
           </div>
 
           <div style={{
-            marginTop: "80px", paddingTop: "48px",
-            borderTop: `1px solid #ffffff10`,
-            display: "flex", justifyContent: "center", gap: "40px", flexWrap: "wrap",
+            marginTop: "64px", paddingTop: "40px",
+            borderTop: `1px solid #ffffff08`,
+            display: "flex", justifyContent: "center", gap: "32px", flexWrap: "wrap",
           }}>
             {["GitHub", "LinkedIn", "Twitter", "Itch.io"].map((s) => (
               <a key={s} href="#" style={{
-                fontFamily: "'Space Mono', monospace", fontSize: "12px", fontWeight: "bold",
+                fontFamily: "'Space Mono', monospace", fontSize: "11px",
                 color: C.muted, textDecoration: "none",
                 letterSpacing: "0.15em", textTransform: "uppercase",
                 transition: "color 0.3s ease",
@@ -538,16 +550,16 @@ export default function BrunoDevPortfolio() {
       </Section>
 
       <footer style={{
-        padding: "32px clamp(24px, 6vw, 80px)",
-        borderTop: `1px solid #ffffff05`,
+        padding: "24px clamp(24px, 6vw, 80px)",
+        borderTop: `1px solid #ffffff08`,
         display: "flex", justifyContent: "space-between", alignItems: "center",
-        flexWrap: "wrap", gap: "16px",
+        flexWrap: "wrap", gap: "12px",
       }}>
-        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "11px", fontWeight: "bold", color: C.muted }}>
-          © 2026 BRUNO.DEV
+        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", color: C.muted }}>
+          © 2025 BRUNO.DEV
         </span>
-        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "11px", fontWeight: "bold", color: C.muted }}>
-          BUILT FOR <span style={{ color: C.text }}>SPEED</span> + <span style={{ color: C.neon }}>PERFORMANCE</span>
+        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", color: C.muted }}>
+          CRAFTED WITH <span style={{ color: C.neon }}>THREE.JS</span> + <span style={{ color: "#7c3aed" }}>GSAP</span>
         </span>
       </footer>
     </>
