@@ -8,6 +8,8 @@ export function GlobalCursor() {
   const raf = useRef();
   const SIZE = 28;
 
+  
+
   useEffect(() => {
     const onMove = (e) => {
       pos.current.x = e.clientX;

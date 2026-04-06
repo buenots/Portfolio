@@ -30,12 +30,12 @@ export default function BrunoDevPortfolio() {
   const heroSubRef = useRef();
   const heroCTARef = useRef();
   const navRef = useRef();
-  
+
   /* ─── Lenis Smooth Scroll ─── */
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.4,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
 
@@ -44,10 +44,10 @@ export default function BrunoDevPortfolio() {
       ScrollTrigger.update();
     });
 
-    gsap.ticker.add((time)=>{
+    gsap.ticker.add((time) => {
       lenis.raf(time * 1000);
     });
-    
+
     gsap.ticker.lagSmoothing(0);
 
     return () => {
@@ -80,21 +80,21 @@ export default function BrunoDevPortfolio() {
     });
 
     // 3. About Section Scrubbing
-    gsap.fromTo(".about-word", 
-      { y: 40, opacity: 0 }, 
+    gsap.fromTo(".about-word",
+      { y: 40, opacity: 0 },
       {
         y: 0, opacity: 1, stagger: 0.02,
         scrollTrigger: {
           trigger: "#about",
           start: "top 75%",
           end: "top 40%",
-          scrub: 1, 
+          scrub: 1,
         }
       }
     );
-    
-    gsap.fromTo(".about-stat", 
-      { y: 80, opacity: 0 }, 
+
+    gsap.fromTo(".about-stat",
+      { y: 80, opacity: 0 },
       {
         y: 0, opacity: 1, stagger: 0.1,
         scrollTrigger: {
@@ -111,7 +111,7 @@ export default function BrunoDevPortfolio() {
     cards.forEach((card, i) => {
       gsap.fromTo(card,
         { y: 150, opacity: 0.2 },
-        { 
+        {
           y: 0, opacity: 1,
           scrollTrigger: {
             trigger: card,
@@ -124,8 +124,8 @@ export default function BrunoDevPortfolio() {
     });
 
     // 5. Skills Reveal
-    gsap.fromTo(".skill-badge-item", 
-      { x: -50, opacity: 0 }, 
+    gsap.fromTo(".skill-badge-item",
+      { x: -50, opacity: 0 },
       {
         x: 0, opacity: 1, stagger: 0.1,
         scrollTrigger: {
@@ -297,11 +297,11 @@ export default function BrunoDevPortfolio() {
 
       <Section id="about">
         <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 clamp(24px, 6vw, 80px)", position: "relative" }}>
-          
+
           {/* Elemento 3D Novo - Jogado mais pro fundo com opacidade muito baixa */}
           <div style={{ position: "absolute", right: "0%", top: "0%", width: "100%", height: "100%", zIndex: 0, opacity: 0.2, pointerEvents: "none", filter: "blur(2px)" }}>
             <Canvas eventSource={typeof window !== 'undefined' ? document.body : undefined} camera={{ position: [0, 0, 10], fov: 45 }}>
-               <FloatingGeometry />
+              <FloatingGeometry />
             </Canvas>
           </div>
 
@@ -379,9 +379,9 @@ export default function BrunoDevPortfolio() {
       <Section id="projects" style={{ background: `linear-gradient(180deg, ${C.bg}, ${C.surface}, ${C.bg})` }}>
         {/* Elemento 3D Novo - Mais opacidade reduzida para nao causar barulho visual */}
         <div style={{ position: "absolute", inset: 0, zIndex: 0, opacity: 0.3, pointerEvents: "none" }}>
-            <Canvas eventSource={typeof window !== 'undefined' ? document.body : undefined} camera={{ position: [0, 0, 10], fov: 75 }}>
-               <FloatingCrystals />
-            </Canvas>
+          <Canvas eventSource={typeof window !== 'undefined' ? document.body : undefined} camera={{ position: [0, 0, 10], fov: 75 }}>
+            <FloatingCrystals />
+          </Canvas>
         </div>
 
         <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 clamp(24px, 6vw, 80px)", position: "relative", zIndex: 1 }}>
@@ -404,9 +404,9 @@ export default function BrunoDevPortfolio() {
             gap: "20px",
           }}>
             {projects.map((p, i) => (
-               <div key={p.title} className="project-card-container">
-                 <ProjectCard {...p} index={i} />
-               </div>
+              <div key={p.title} className="project-card-container">
+                <ProjectCard {...p} index={i} />
+              </div>
             ))}
           </div>
         </div>
